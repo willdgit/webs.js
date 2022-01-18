@@ -58,6 +58,6 @@ p{
 
 #header{
     position: absolute;
-
+    user-select: none;
     right: 45%;
 }
