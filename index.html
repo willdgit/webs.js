@@ -1,0 +1,40 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A Basic HTML5 Template</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+  <!-- your content here... -->
+  
+  <div  id="sliderBG"></div>
+  <div id="buttonDiv" class="button">  <button id="showSliders">Show Sliders</button>
+  <div id="sliderDiv" class="range">
+    <input type="color" value="#ffffff" id = "colorPicker">
+    <!--Circle size-->
+    <p>Point Radius</p>
+    <input type="range" id="radius" min=0 max=5 step=0.125 value=1>
+    <!--Opacity / transparancey boost-->
+    <p>Opacity</p>
+    <input type="range" id="opacity" min=0 max=0.5 step=0.01 value=0.10>
+    <!--Connection range influence-->
+    <p>Range coefficent</p>
+    <input type="range" id="threshold" min=0 max=500 step=1 value=50>
+    <p>Max Range</p>
+    <input type="range" id="distThreshold" min=0 max=500 step=1 value=50>
+    <p>Simulation Timestep</p>
+    <input type="range" id="timestep" min=1 max=50 step=1 value=10>
+    <p># points (req. refresh)</p>
+    <input type="number" class="number" id="amount" min=1 max=500 step=1 value=200>
+    <button id="pause">Pause</button>
+  </div>
+  </div>
+  <p id="header">Click to spawn particles!</p>
+  <p id="count">200 particles</p>
+    <canvas id="canvas" width="1920" height="1080"></canvas>
+  <script src="script.js"></script>
+</body>
+</html>
