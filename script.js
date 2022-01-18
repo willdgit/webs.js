@@ -2,41 +2,42 @@ window.onload = function () {
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
 
-    var slider = document.getElementById("radius");
-    var opacitySlider = document.getElementById("opacity");
-    var thresholdSlider = document.getElementById("threshold");
-    var distThresholdSlider = document.getElementById("distThreshold");
-    var timestepSlider = document.getElementById("timestep");
-    var velSlider = document.getElementById("velocity");
-    var amountBox = document.getElementById("amount");
-    let amount = sessionStorage.getItem("amount");
-    if (amount == null || amount == 0 || amount == "") {
-        amount = 200;
-    }
-
+    //slider UI vars
     var sliderButton = document.getElementById("showSliders");
-
     let sliderBG = document.getElementById("sliderBG");
     let sliderDiv = document.getElementById("sliderDiv");
-    sliderBG.style.display = 'none';
+    var timestepSlider = document.getElementById("timestep");
+    sliderBG.style.display = 'none';//sliders hidden by default
     sliderDiv.style.display = 'none';
-
+    
+    //point vars
     let circles = [];
-
     let numCircles = 0;
     let radius = 1;//0.5 look scool
     let spawnVel = 0.5;
-
+    
+    //constraint vars
     let opacityStep = 0.1;
     let distThreshold = 50;
     let threshold = 50;
+    
+    //SetInterval vars
+    var timestep = 15;
+    var intervalId;
 
+    //color vars
     var color;
     var colorR = 255;
     var colorG = 255;
     var colorB = 255;
 
+    //use session to get desired amount of points
+    let amount = sessionStorage.getItem("amount");
+    if (amount == null || amount == 0 || amount == "") {
+        amount = 200;
+    }
 
+    //return random float between max and min
     function getRandomNum(max, min) {
         num = Math.random() * (max - min) + min;
         return Math.round(num * 4) / 4;;//round to nearest 0.25
@@ -187,8 +188,6 @@ window.onload = function () {
         }
     }
 
-    var timestep = 15;
-    var intervalId;
 
     //update the canvas every 10 ms,
     function startInterval(_interval) {
@@ -212,21 +211,28 @@ window.onload = function () {
         });
     }
 
-    slider.addEventListener('input', function () {
-        radius = slider.value;
+    //#region slider UI
+
+    var radSlider = document.getElementById("radius");
+    radSlider.addEventListener('input', function () {
+        radius = radSlider.value;
     });
 
+    var opacitySlider = document.getElementById("opacity");
     opacitySlider.addEventListener('input', function () {
         opacityStep = opacitySlider.value;
     });
 
+    var thresholdSlider = document.getElementById("threshold");
     thresholdSlider.addEventListener('input', function () {
         threshold = thresholdSlider.value;
     });
 
+    var distThresholdSlider = document.getElementById("distThreshold");
     distThresholdSlider.addEventListener('input', function () {
         distThreshold = distThresholdSlider.value;
     });
+
 
     timestepSlider.addEventListener('mouseup', function () {
         timestep = timestepSlider.value;
@@ -234,40 +240,50 @@ window.onload = function () {
         startInterval(timestep);
     });
 
-
+    var amountBox = document.getElementById("amount");
     amountBox.addEventListener('input', function () {
         sessionStorage.setItem("amount", amountBox.value);
     });
 
-    var t = false;
+    //pause button toggle
+    var pauseToggle = false;
     var pause = document.getElementById("pause");
     pause.addEventListener("click", function () {
-        if (!t) {
+        if (!pauseToggle) {
             clearInterval(intervalId);
-            t = true;
+            pauseToggle = true;
             pause.innerHTML = "Play";
         } else {
             startInterval(timestepSlider.value);
-            t = false;
+            pauseToggle = false;
             pause.innerHTML = "Pause";
         }
-
     });
 
-    //toggle the slider div
-    var toggle = true;
+    //slider div toggle
+    var divToggle = true;
     sliderButton.addEventListener("click", function () {
-        if (!toggle) {
+        if (!divToggle) {
             sliderBG.style.display = 'none';
             sliderDiv.style.display = 'none';
-            toggle = true;
+            divToggle = true;
         }
         else {
             sliderBG.style.display = 'block';
             sliderDiv.style.display = 'block';
-            toggle = false;
+            divToggle = false;
         }
     });
+
+    //colour picker listener
+    document.getElementById("colorPicker").addEventListener("change", function (event) {
+        var color = event.target.value;
+        colorR = hexToRgb(color).r;
+        colorG = hexToRgb(color).g;
+        colorB = hexToRgb(color).b
+    }, false);
+
+    //#endregion slider UI
 
     //add a circle on canvas click
     canvas.addEventListener('click', event => {
@@ -292,15 +308,6 @@ window.onload = function () {
         } : null;
     }
 
-    document.getElementById("colorPicker").addEventListener("change", function (event) {
-        var color = event.target.value;
-        colorR = hexToRgb(color).r;
-        colorG = hexToRgb(color).g;
-        colorB = hexToRgb(color).b
-    }, false);
-
-    
-
+    //start the simulation
     startInterval(timestep);
-    console.log("done");
 }
