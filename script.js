@@ -18,8 +18,8 @@ window.onload = function () {
     
     //constraint vars
     let opacityStep = 0.1;
-    let distThreshold = 50;
-    let threshold = 50;
+    let distThreshold = 100;
+    let threshold = 100;
     
     //SetInterval vars
     var timestep = 15;
@@ -42,15 +42,14 @@ window.onload = function () {
         num = Math.random() * (max - min) + min;
         return Math.round(num * 4) / 4;;//round to nearest 0.25
     }
+    
     //TODO find out how to make mouse influence work
     //if point within radius from mouse pos, set its past vel to 0?
 
-    //add pastVelOffset param to circle, letting us set the past vel offset
     //add checkbox to scale circle alpha with constraint alpha
     //add checkbox to change circle fillstyle color to set color (WIHTOUT AFFECTING PERFORMANCE)
-    //add text to top of control saying "further down (on the list), higher performace impact"
     //add num input for # of cirlcles spawned per click, for loop spawn code in canvas click listener
-    //add button to reset slider values (and or var values) to default
+
 
     //spawn multiple points in an area on click
 
