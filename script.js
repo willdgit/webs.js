@@ -167,13 +167,10 @@ window.onload = function () {
                 if (diff > 0) {//only update the alpha if the line is visible (i.e. within distance)
                     for (let index = 0; index < diff; index = index + 1) {
                         this.alpha += 0.1 * opacityStep;
-
                     }
                 }
             }
-
         }
-
         draw() {
             ctx.strokeStyle = "rgba(" + colorR + "," + colorG + "," + colorB + "," + this.alpha + ")";
             ctx.moveTo(this.p1.x, this.p1.y);
