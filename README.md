@@ -1,5 +1,5 @@
 # webs.js
-<willdgit.github.io/webs/>
+<https://willdgit.github.io/webs/>
 
 An interactive experiment with Verlet Integration.
 
