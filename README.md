@@ -1,7 +1,7 @@
 # webs.js
 <https://willdgit.github.io/webs/>
 
-An interactive experiment with Verlet Integration.
+An interactive experiment with Verlet Integration in JavaScript.
 
 Uses the velocity Verlet algoritim to calculte the trajectory of particles and draws constraints between them while allowing the user to modifiy simulation paramaters.
 
