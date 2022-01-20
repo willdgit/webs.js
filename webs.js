@@ -18,7 +18,7 @@ window.onload = function () {
     
     //constraint vars
     let opacityStep = 0.1;
-    let distThreshold = 100;
+    let distThreshold = 300;
     let threshold = 100;
     
     //SetInterval vars
@@ -51,7 +51,6 @@ window.onload = function () {
             b: parseInt(result[3], 16)
         } : null;
     }
-    
     class Circle {
         constructor(x, y) {
             this.constraints = [];
@@ -121,31 +120,42 @@ window.onload = function () {
             this.constraints.push(new Constraint(this, point));
         }
         //remove constraint from this points constraint array
-        free(constraint) {
+        sever(constraint) {
             this.constraints.splice(this.constraints.indexOf(constraint), 1);
         }
     }
 
-    //each constraint has 2 points
+
     class Constraint {
+        //each constraint takes in 2 points, use canvas lineTo to draw the constraint between the points
         constructor(p1, p2) {
             this.p1 = p1;
             this.p2 = p2;
-            this.alpha = 0;
-            this.dist = 0;
+            this.alpha = 0;//alpha will depend on a base value minus the distance multiplied by a coefficent
+            this.dist = 0;//distance between the 2 points
         }
 
         update() {
             this.alpha = 0;
-            let dx = this.p1.x - this.p2.x;
-            let dy = this.p1.y - this.p2.y;
-            this.dist = Math.sqrt(dx * dx + dy * dy);
-            
-            //for every int distance less than threshold (say 250 or smth(500 is too high)) increase alpha by 0.1?
-            let diff = threshold - this.dist;
+            //calculate the distance between each point
+            let distx = this.p1.x - this.p2.x;
+            let disty = this.p1.y - this.p2.y;
+            this.dist = Math.sqrt(distx * distx + disty * disty);
 
-            if (this.dist < distThreshold) {
-                if (diff > 0) {//only update the alpha if the line is visible (i.e. within distance)
+            //this should help performance?, it does hugely the opposite
+            // if (this.dist > 500){
+            //    this.p1.sever(this);
+            //    this.p2.sever(this);
+            // }else if(this.dist<499){//AND we are not attached <- thats whats killing performance
+            //     //this.p1.attach(this.p2);
+            // }
+            
+            //calculate the difference between the distance and the threshold, 
+            let diff = distThreshold - this.dist;
+            if (this.dist < threshold) {
+                if (diff > 0) {
+                    //for every int in index(calculated above), 
+                    //increase alpha by an amount times the coeffecent
                     for (let index = 0; index < diff; index = index + 1) {
                         this.alpha += 0.1 * opacityStep;
                     }
