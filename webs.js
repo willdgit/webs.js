@@ -51,18 +51,7 @@ window.onload = function () {
             b: parseInt(result[3], 16)
         } : null;
     }
-
-    //TODO find out how to make mouse influence work
-    //if point within radius from mouse pos, set its past vel to 0?
-
-    //add checkbox to scale circle alpha with constraint alpha
-    //add checkbox to change circle fillstyle color to set color (WIHTOUT AFFECTING PERFORMANCE)
-    //add num input for # of cirlcles spawned per click, for loop spawn code in canvas click listener
-
-
-    //spawn multiple points in an area on click
-
-    //PERFORMACE: ROUND EVERY USEAGE OF SLIDER VALUES, ESP MULTIPLICATION
+    
     class Circle {
         constructor(x, y) {
             this.constraints = [];
@@ -151,14 +140,6 @@ window.onload = function () {
             let dx = this.p1.x - this.p2.x;
             let dy = this.p1.y - this.p2.y;
             this.dist = Math.sqrt(dx * dx + dy * dy);
-
-            //this could really save performace
-            // if (this.dist > 500){
-            //    this.p1.free(this);
-            //    this.p2.free(this);
-            // }else if we are not attached{
-            //     //this.p1.attach(this.p2);
-            // }
             
             //for every int distance less than threshold (say 250 or smth(500 is too high)) increase alpha by 0.1?
             let diff = threshold - this.dist;
