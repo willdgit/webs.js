@@ -7,6 +7,7 @@ window.onload = function () {
     let sliderBG = document.getElementById("sliderBG");
     let sliderDiv = document.getElementById("sliderDiv");
     var timestepSlider = document.getElementById("timestep");
+    let persistToggle = document.getElementById("persist");
     sliderBG.style.display = 'none';//sliders hidden by default
     sliderDiv.style.display = 'none';
     
@@ -18,11 +19,11 @@ window.onload = function () {
     
     //constraint vars
     let opacityStep = 0.1;
-    let distThreshold = 300;
-    let threshold = 100;
+    let distThreshold = 155;
+    let threshold = 250;
     
     //SetInterval vars
-    var timestep = 15;
+    var timestep = 5;
     var intervalId;
 
     var colorR = 255;
@@ -51,6 +52,20 @@ window.onload = function () {
             b: parseInt(result[3], 16)
         } : null;
     }
+
+    //TODO find out how to make mouse influence work
+    //if point within radius from mouse pos, set its past vel to 0?
+    //find out why setting radius to 0 speeds it up so much??!
+
+
+    //add checkbox to scale circle alpha with constraint alpha
+    //add checkbox to change circle fillstyle color to set color (WIHTOUT AFFECTING PERFORMANCE)
+    //add num input for # of cirlcles spawned per click, for loop spawn code in canvas click listener
+
+
+    //spawn multiple points in an area on click
+
+    //PERFORMACE: ROUND EVERY USEAGE OF SLIDER VALUES, ESP MULTIPLICATION
     class Circle {
         constructor(x, y) {
             this.constraints = [];
@@ -125,7 +140,6 @@ window.onload = function () {
         }
     }
 
-
     class Constraint {
         //each constraint takes in 2 points, use canvas lineTo to draw the constraint between the points
         constructor(p1, p2) {
@@ -163,10 +177,12 @@ window.onload = function () {
             }
         }
         draw() {
+            if(this.alpha > 0){//only draw if the alpha is visible
             ctx.strokeStyle = "rgba(" + colorR + "," + colorG + "," + colorB + "," + this.alpha + ")";
             ctx.moveTo(this.p1.x, this.p1.y);
             ctx.lineTo(this.p2.x, this.p2.y);
             ctx.stroke();
+            }
         }
     }
 
@@ -182,6 +198,7 @@ window.onload = function () {
 
     //call spawnCircle() amount times, attaching each circle to all others
     for (let index = 0; index < amount; index++) {
+        //use radius to ensure it spawns within canvas coords
         spawnCircle(getRandomNum(canvas.width - radius, radius * 2), getRandomNum(canvas.height - radius, radius * 2));
         if (index !== 0) {
             //foreach circle in circles, attach to every circle
@@ -203,7 +220,8 @@ window.onload = function () {
         //fill the canvas
         ctx.beginPath();
         ctx.fillStyle = '#5a5b62';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if(persistToggle.checked == false)
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.closePath();
         ctx.fillStyle = "#FFFFFF";
 
@@ -279,6 +297,10 @@ window.onload = function () {
             }
         });
     
+
+
+
+
         //slider div toggle
         var divToggle = true;
         sliderButton.addEventListener("click", function () {
