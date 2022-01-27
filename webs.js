@@ -53,19 +53,7 @@ window.onload = function () {
         } : null;
     }
 
-    //TODO find out how to make mouse influence work
-    //if point within radius from mouse pos, set its past vel to 0?
-    //find out why setting radius to 0 speeds it up so much??!
 
-
-    //add checkbox to scale circle alpha with constraint alpha
-    //add checkbox to change circle fillstyle color to set color (WIHTOUT AFFECTING PERFORMANCE)
-    //add num input for # of cirlcles spawned per click, for loop spawn code in canvas click listener
-
-
-    //spawn multiple points in an area on click
-
-    //PERFORMACE: ROUND EVERY USEAGE OF SLIDER VALUES, ESP MULTIPLICATION
     class Circle {
         constructor(x, y) {
             this.constraints = [];
