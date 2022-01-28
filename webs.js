@@ -8,7 +8,7 @@ window.onload = function () {
     let sliderDiv = document.getElementById("sliderDiv");
     var timestepSlider = document.getElementById("timestep");
     let persistToggle = document.getElementById("persist");
-    sliderBG.style.display = 'none';//sliders hidden by default
+    sliderBG.style.display = 'none';
     sliderDiv.style.display = 'none';
     
     //point vars
@@ -68,7 +68,7 @@ window.onload = function () {
 
         update() {
             //preform the verlet, velocity is calculated based on our past and current position
-            //no (real) need to asign velocity to a var, it will be constant through the simulation (no drag / gravity)
+            //no (real) need to asign velocity to a var, it will be constant through the simulation, no drag / gravity
             this.vx = this.x - this.pastX;
             this.vy = this.y - this.pastY;
 
@@ -81,8 +81,7 @@ window.onload = function () {
             this.pastY = this.y;
             this.x = newX;
             this.y = newY;
-
-            //reset velocity
+            
             this.vy = this.vx = 0;
 
             //edge bounce logic (if point is beyond the canvas, move it to edge and reverse direction)
@@ -103,8 +102,6 @@ window.onload = function () {
             this.constraints.forEach((constraint) => constraint.update());
         }
 
-        //we may not need to set i here, since every point is connected to every point, we 
-        //should know the exact number of constraints for each point (n factorial?)
         draw() {
             let i = this.constraints.length;
             while (i--) {
@@ -133,8 +130,8 @@ window.onload = function () {
         constructor(p1, p2) {
             this.p1 = p1;
             this.p2 = p2;
-            this.alpha = 0;//alpha will depend on a base value minus the distance multiplied by a coefficent
-            this.dist = 0;//distance between the 2 points
+            this.alpha = 0;
+            this.dist = 0;
         }
 
         update() {
@@ -143,14 +140,6 @@ window.onload = function () {
             let distx = this.p1.x - this.p2.x;
             let disty = this.p1.y - this.p2.y;
             this.dist = Math.sqrt(distx * distx + disty * disty);
-
-            //this should help performance?, it does hugely the opposite
-            // if (this.dist > 500){
-            //    this.p1.sever(this);
-            //    this.p2.sever(this);
-            // }else if(this.dist<499){//AND we are not attached <- thats whats killing performance
-            //     //this.p1.attach(this.p2);
-            // }
             
             //calculate the difference between the distance and the threshold, 
             let diff = distThreshold - this.dist;
@@ -174,7 +163,7 @@ window.onload = function () {
         }
     }
 
-    var c;//inital circle (declared here to be refrenced from canvas click listener)
+    var c;//inital circle (refrenced from canvas click listener)
     //spawns a cricle at a random x and y
     function spawnCircle(x, y) {
         c = new Circle(x, y);
@@ -186,11 +175,8 @@ window.onload = function () {
 
     //call spawnCircle() amount times, attaching each circle to all others
     for (let index = 0; index < amount; index++) {
-        //use radius to ensure it spawns within canvas coords
         spawnCircle(getRandomNum(canvas.width - radius, radius * 2), getRandomNum(canvas.height - radius, radius * 2));
         if (index !== 0) {
-            //foreach circle in circles, attach to every circle
-            //TODO prevent circle from attaching to itself
             circles.forEach(circle => {
                 circle.attach(circles[index])
             });
@@ -270,7 +256,6 @@ window.onload = function () {
             sessionStorage.setItem("amount", amountBox.value);
         });
     
-        //pause button toggle
         var pauseToggle = false;
         var pause = document.getElementById("pause");
         pause.addEventListener("click", function () {
@@ -284,12 +269,7 @@ window.onload = function () {
                 pause.innerHTML = "Pause";
             }
         });
-    
-
-
-
-
-        //slider div toggle
+   
         var divToggle = true;
         sliderButton.addEventListener("click", function () {
             if (!divToggle) {
@@ -304,7 +284,6 @@ window.onload = function () {
             }
         });
     
-        //colour picker listener
         document.getElementById("colorPicker").addEventListener("change", function (event) {
             var color = event.target.value;
             colorR = hexToRgb(color).r;
