@@ -1,3 +1,5 @@
+let mouse = { x: 0, y: 0 };
+
 window.onload = function () {
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
@@ -10,7 +12,7 @@ window.onload = function () {
     let persistToggle = document.getElementById("persist");
     sliderBG.style.display = 'none';
     sliderDiv.style.display = 'none';
-    
+
     //point vars
     let circles = [];
     let numCircles = 0;
