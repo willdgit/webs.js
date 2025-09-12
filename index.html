@@ -1,34 +1,541 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>webs.js</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>webs.js - Fullscreen Particle System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.min.css" onerror="this.href='style.css'">
+    <style>
+        body { overflow: hidden; width: 100vw; height: 100vh; }
+        #canvas { display: block; width: 100vw; height: 100vh; background-color: #000000; cursor: crosshair; }
+
+        .advanced-panel {
+            z-index: 1001; /* Higher than main panel to overlay */
+        }
+
+        /* Ensure Advanced button shows gradient when active */
+        a[onclick*="toggleAdvanced"],
+        button[onclick*="toggleAdvanced"] {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            border-color: transparent !important;
+        }
+
+        .advanced-panel.hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <div id="sliderBG"></div>
-  <div id="buttonDiv" class="button">  <button id="showSliders">Show Sliders</button>
-    <div id="sliderDiv" class="range">
-      <p>Point radius</p>
-      <input type="range" id="radius" min=0 max=5 step=0.125 value=1>
-      <p>Opacity coefficent</p>
-      <input type="range" id="opacity" min=0 max=0.5 step=0.01 value=0.10>
-      <p>Distance cutoff</p>
-      <input type="range" id="threshold" min=0 max=500 step=1 value=250>
-      <p>Distance coefficent</p>
-      <input type="range" id="distThreshold" min=0 max=500 step=1 value=155>
-      <p>Simulation Timestep</p>
-      <input type="range" id="timestep" min=1 max=50 step=1 value=5>
-      <p># points (req. refresh)</p>
-      <input type="number" class="number" id="amount" min=1 max=500 step=1 value=200>
-      <button id="pause">Pause</button>
-      <input type="color" value="#ffffff" id = "colorPicker">
-      <input type="checkbox" id="persist"><label for="persist">Persist mode</label>
+    <div class="toggle-controls">
+        <button class="toggle-btn" onclick="toggleControls()">Toggle Controls</button>
     </div>
-  </div>
-  <p id="header">Click to spawn particles!</p>
-  <p id="count">200 particles</p>
-    <canvas id="canvas" width="1920" height="1080"></canvas>
-  <script src="webs.js"></script>
+
+    <div class="control-panel hidden" id="controlPanel">
+        <div class="control-header">
+            <h3>Simulation Controls</h3>
+            <button class="close-btn" onclick="toggleControls()" aria-label="Close controls">×</button>
+        </div>
+        <div class="control-group">
+            <h4>Basic Settings</h4>
+            <div class="control-row">
+                <label class="control-label">Particle Count</label>
+                <input type="number" id="particleCountValue" value="2000" min="10" max="5000" class="control-value-input">
+                <input type="range" id="particleCountSlider" min="10" max="5000" value="2000" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label">Particle Radius</label>
+                <input type="number" id="radiusValue" value="2.0" min="0" max="5" step="0.1" class="control-value-input">
+                <input type="range" id="radiusSlider" min="0" max="5" step="0.1" value="2" class="control-input">
+            </div>
+
+            <div class="control-row">
+                <label class="control-label">Simulation Speed</label>
+                <input type="number" id="simulationSpeedValue" value="1.0" min="0.1" max="5" step="0.1" class="control-value-input">
+                <input type="range" id="simulationSpeedSlider" min="0.1" max="5" step="0.1" value="1.0" class="control-input">
+            </div>
+        </div>
+        <div class="control-group">
+            <h4>Physics & Connections</h4>
+            <div class="control-row">
+                <label class="control-label">Opacity Step</label>
+                <input type="number" id="opacityStepValue" value="0.1" min="0.01" max="0.3" step="0.01" class="control-value-input">
+                <input type="range" id="opacityStepSlider" min="0.01" max="0.3" step="0.01" value="0.1" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label">Connection Threshold</label>
+                <input type="number" id="connectionThresholdValue" value="70" min="0" max="100" class="control-value-input">
+                <input type="range" id="connectionThresholdSlider" min="0" max="100" value="70" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label">Fade Distance</label>
+                <input type="number" id="fadeDistanceValue" value="50" min="0" max="150" class="control-value-input">
+                <input type="range" id="fadeDistanceSlider" min="00" max="150" value="50" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label" for="enableMouseRepelToggle">Mouse Repel</label>
+                <input type="checkbox" id="enableMouseRepelToggle" class="control-input" checked>
+            </div>
+            <div class="control-row">
+                <label class="control-label" for="enableConnectionsToggle">Enable Connections</label>
+                <input type="checkbox" id="enableConnectionsToggle" checked class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label" for="enableConnectionTrailsToggle">Trails (warning: cool)</label>
+                <input type="checkbox" id="enableConnectionTrailsToggle" class="control-input">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <h4>Appearance</h4>
+            <div class="control-row">
+                <label class="control-label">Particle Color</label>
+                <input type="color" id="particleColorPicker" value="#00ff00" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label">Background Color</label>
+                <input type="color" id="backgroundColorPicker" value="#000000" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label" for="showStatsToggle">Show Performance Stats</label>
+                <input type="checkbox" id="showStatsToggle" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label" for="showOverlayToggle">Show Overlay</label>
+                <input type="checkbox" id="showOverlayToggle" checked class="control-input">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-row">
+                <a class="cta-btn secondary" href='/demo.html' target="_blank" rel="noopener">
+                    View Demo Page
+                </a>
+                <a class="cta-btn secondary" onclick="toggleAdvanced()">
+                    Advanced
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-panel advanced-panel hidden" id="advancedPanel">
+        <div class="control-header">
+            <h3>Advanced Controls</h3>
+            <button class="close-btn" onclick="toggleAdvanced()" aria-label="Close advanced controls">×</button>
+        </div>
+
+        <div class="control-group">
+            <h4>Performance</h4>
+            <div class="control-row">
+                <label class="control-label">Grid Size</label>
+                <input type="number" id="gridSizeValue" value="20" min="5" max="50" class="control-value-input">
+                <input type="range" id="gridSizeSlider" min="5" max="50" value="20" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label" for="enableObjectPoolingToggle">Object Pooling</label>
+                <input type="checkbox" id="enableObjectPoolingToggle" checked class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label" for="enableAdaptiveLodToggle">Adaptive LOD</label>
+                <input type="checkbox" id="enableAdaptiveLodToggle" checked class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label" for="enableBatchRenderingToggle">Batch Rendering</label>
+                <input type="checkbox" id="enableBatchRenderingToggle" checked class="control-input">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h4>Physics</h4>
+            <div class="control-row">
+                <label class="control-label" for="enableAdvancedPhysicsToggle">Advanced Physics</label>
+                <input type="checkbox" id="enableAdvancedPhysicsToggle" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label">Damping</label>
+                <input type="number" id="dampingValue" value="0.99" min="0.9" max="1.0" step="0.01" class="control-value-input">
+                <input type="range" id="dampingSlider" min="0.01" max="1.0" step="0.01" value="0.99" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label">Gravity X</label>
+                <input type="number" id="gravityXValue" value="0" min="-100" max="100" class="control-value-input">
+                <input type="range" id="gravityXSlider" min="-100" max="100" value="0" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label">Gravity Y</label>
+                <input type="number" id="gravityYValue" value="50" min="-100" max="100" class="control-value-input">
+                <input type="range" id="gravityYSlider" min="-100" max="100" value="50" class="control-input">
+            </div>
+        </div>
+        <div class="control-group">
+            <h4>Connections</h4>
+            <div class="control-row">
+                <label class="control-label">Connection Hysteresis</label>
+                <input type="number" id="connectionHysteresisValue" value="0.1" min="0" max="0.5" step="0.01" class="control-value-input">
+                <input type="range" id="connectionHysteresisSlider" min="0" max="0.5" step="0.01" value="0.1" class="control-input">
+            </div>
+            <div class="control-row">
+                <label class="control-label">Max Connections/Particle</label>
+                <input type="number" id="maxConnectionsValue" value="10" min="1" max="20" class="control-value-input">
+                <input type="range" id="maxConnectionsSlider" min="1" max="20" value="10" class="control-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="status-display hidden">
+        <div class="status-item">
+            <span class="status-label">Particles:</span>
+            <span class="status-value" id="particleCount">0</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">FPS:</span>
+            <span class="status-value" id="fps">0</span>
+        </div>
+
+        <div class="status-item">
+            <span class="status-label">LOD:</span>
+            <span class="status-value" id="lodLabel">Off</span>
+        </div>
+    </div>
+
+    <!-- Nameplate/CTA Overlay -->
+    <div class="canvas-overlay" id="canvasOverlay">
+        <div class="nameplate">
+            <div class="nameplate-header">
+                <h3>webs.js</h3>
+                <span class="version-badge">v2.0</span>
+            </div>
+            <p class="tagline">High-Performance Particle System</p>
+            <div class="cta-buttons">
+                <a class="cta-btn primary" href='https://github.com/willdgit/webs.js' target="_blank" rel="noopener">
+                <span>⭐</span> Star on GitHub
+                    </a>
+                <a class="cta-btn secondary" href='https://www.npmjs.com/package/webs.js' target="_blank" rel="noopener">
+                    📦 NPM Package
+                </a>
+            </div>
+            <div class="features">
+                <span class="feature-tag">Real-time</span>
+                <span class="feature-tag">60+ FPS</span>
+                <span class="feature-tag">Customizable</span>
+                <span class="feature-tag">API</span>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script src="webs.js"></script>
+    <script>
+        let particleSystem = null;
+        let canvas = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            canvas = document.getElementById('canvas');
+            initializeParticleSystem();
+            setupControlListeners();
+            syncInputValues();
+        });
+        
+        function initializeParticleSystem() {
+            particleSystem = initParticles(canvas, {
+                particleCount: 2000,
+                radius: 2,
+                particleColor: '#00ff00',
+                backgroundColor: '#000000',
+                enableConnections: true,
+                maxConnectionDistance: 70,
+                fadeStartDistance: 50,
+                opacityStep: 0.1,
+                connectionHysteresis: 0.1,
+                enableMouseRepel: true,
+                enableAdvancedPhysics: false,
+                damping: 0.99,
+                speed: 1.0
+                // gravity: { x: 0, y: 0 }
+            });
+
+            canvas.addEventListener('click', function(e) {
+                if (particleSystem) {
+                    const rect = canvas.getBoundingClientRect();
+                    particleSystem.addParticle(e.clientX - rect.left, e.clientY - rect.top);
+                    updateDisplay();
+
+                    console.log(particleSystem.getStats());
+                }
+            });
+            
+            particleSystem.start();
+            updateDisplay();
+        }
+
+        //declare all UI controls into an array with associated HTML elements and event actions
+        function setupControlListeners() {
+            const controls = [
+                //Basic settings section
+                {
+                    slider: 'particleCountSlider',
+                    input: 'particleCountValue',
+                    action: (v) => particleSystem?.setParticleCount(parseInt(v))
+                },
+                {
+                    slider: 'radiusSlider',
+                    input: 'radiusValue',
+                    format: (v) => parseFloat(v).toFixed(1),
+                    action: (v) => particleSystem?.updateOptions({ radius: parseFloat(v) })
+                },
+                {
+                    slider: 'simulationSpeedSlider',
+                    input: 'simulationSpeedValue',
+                    format: (v) => parseFloat(v).toFixed(1),
+                    action: (v) => particleSystem?.updateOptions({ speed: parseFloat(v) })
+                },
+                //Physics / connections section
+                {
+                    slider: 'connectionThresholdSlider',
+                    input: 'connectionThresholdValue',
+                    action: (v) => particleSystem?.updateOptions({ maxConnectionDistance: parseInt(v) })
+                },
+                {
+                    slider: 'fadeDistanceSlider',
+                    input: 'fadeDistanceValue',
+                    action: (v) => particleSystem?.updateOptions({ fadeStartDistance: parseInt(v) })
+                },
+                {
+                    slider: 'connectionHysteresisSlider',
+                    input: 'connectionHysteresisValue',
+                    format: (v) => parseFloat(v).toFixed(2),
+                    action: (v) => particleSystem?.updateOptions({ connectionHysteresis: parseFloat(v) })
+                },
+                {
+                    slider: 'opacityStepSlider',
+                    input: 'opacityStepValue',
+                    format: (v) => parseFloat(v).toFixed(2),
+                    action: (v) => particleSystem?.updateOptions({ opacityStep: parseFloat(v) })
+                },
+                {
+                    element: 'enableMouseRepelToggle',
+                    event: 'change',
+                    action: (v) => particleSystem?.updateOptions({ enableMouseRepel: v === 'true' || v === true })
+                },
+                //Appearance section
+                //color pickers
+                {
+                    element: 'particleColorPicker',
+                    event: 'input',
+                    action: (v) => particleSystem?.updateOptions({ particleColor: v })
+                },
+                {
+                    element: 'backgroundColorPicker',
+                    event: 'input',
+                    action: (v) => particleSystem?.updateOptions({ backgroundColor: v })
+                },
+                //checkboxes / toggles
+                {
+                    element: 'enableConnectionsToggle',
+                    event: 'change',
+                    action: (v) => particleSystem?.updateOptions({ enableConnections: v === 'true' || v === true })
+                },
+                {
+                    element: 'enableConnectionTrailsToggle',
+                    event: 'change',
+                    action: (v) => particleSystem?.updateOptions({ enableTrails: v === 'true' || v === true })
+                },
+                {
+                    element: 'showOverlayToggle',
+                    event: 'change',
+                    action: (v) => {
+                        if (v === 'true' || v === true) {
+                            document.getElementById('canvasOverlay')?.classList.remove('hidden');
+                        } else {
+                            document.getElementById('canvasOverlay')?.classList.add('hidden');
+                        }
+                    }
+                },
+                {
+                    element: 'enableAdvancedPhysicsToggle',
+                    event: 'change',
+                    action: (v) => particleSystem?.updateOptions({ enableAdvancedPhysics: v === 'true' || v === true })
+                },
+                // Advanced controls
+                {
+                    slider: 'gridSizeSlider',
+                    input: 'gridSizeValue',
+                    action: (v) => particleSystem?.updateOptions({ gridSize: parseInt(v) })
+                },
+                {
+                    slider: 'maxConnectionsSlider',
+                    input: 'maxConnectionsValue',
+                    action: (v) => particleSystem?.updateOptions({ maxConnectionsPerParticle: parseInt(v) })
+                },
+                {
+                    slider: 'dampingSlider',
+                    input: 'dampingValue',
+                    format: (v) => parseFloat(v).toFixed(2),
+                    action: (v) => particleSystem?.updateOptions({ damping: parseFloat(v) })
+                },
+                {
+                    slider: 'gravityXSlider',
+                    input: 'gravityXValue',
+                    action: (v) => {
+                        const currentGravity = particleSystem?.opts?.gravity || { x: 0, y: 50 };
+                        particleSystem?.updateOptions({ gravity: { ...currentGravity, x: parseInt(v) } });
+                    }
+                },
+                {
+                    slider: 'gravityYSlider',
+                    input: 'gravityYValue',
+                    action: (v) => {
+                        const currentGravity = particleSystem?.opts?.gravity || { x: 0, y: 50 };
+                        particleSystem?.updateOptions({ gravity: { ...currentGravity, y: parseInt(v) } });
+                    }
+                },
+                {
+                    element: 'enableObjectPoolingToggle',
+                    event: 'change',
+                    action: (v) => particleSystem?.updateOptions({ enableObjectPooling: v === 'true' || v === true })
+                },
+                {
+                    element: 'enableAdaptiveLodToggle',
+                    event: 'change',
+                    action: (v) => particleSystem?.updateOptions({ enableAdaptiveLOD: v === 'true' || v === true })
+                },
+                {
+                    element: 'enableBatchRenderingToggle',
+                    event: 'change',
+                    action: (v) => particleSystem?.updateOptions({ enableBatchRendering: v === 'true' || v === true })
+                },
+                {
+                    element: 'showStatsToggle',
+                    event: 'change',
+                    action: (v) => {
+                        const statsDisplay = document.querySelector('.status-display');
+                        if (statsDisplay) {
+                            if (v === 'true' || v === true) {
+                                statsDisplay.classList.remove('hidden');
+                            } else {
+                                statsDisplay.classList.add('hidden');
+                            }
+                        }
+                    }
+                }
+            ];
+
+            //initialize all defined UI control actions with event listeners, based on the array above
+            controls.forEach(({ slider, input, element, event, format, action }) => {
+                //handle slider/input pairs
+                if (slider && input) {
+                    const sliderEl = document.getElementById(slider);
+                    const inputEl = document.getElementById(input);
+                    
+                    if (sliderEl && inputEl) {
+                        sliderEl.addEventListener('input', function() {
+                            const value = this.value;
+                            inputEl.value = format ? format(value) : value;
+                            if (particleSystem) action(value);
+                            if (slider === 'particleCountSlider') updateDisplay();
+                        });
+                        
+                        inputEl.addEventListener('input', function() {
+                            const value = this.value;
+                            sliderEl.value = value;
+                            if (particleSystem) action(value);
+                            if (slider === 'particleCountSlider') updateDisplay();
+                        });
+                    }
+                }
+                //handle single elements (color pickers, checkboxes)
+                else if (element && event && action) {
+                    const el = document.getElementById(element);
+                    if (el) {
+                        el.addEventListener(event, function() {
+                            //for checkboxes, use checked property; for other elements, use value
+                            const value = this.type === 'checkbox' ? this.checked : this.value;
+                            if (particleSystem) action(value);
+                        });
+                    }
+                }
+            });
+        }
+    
+        //update the display of our particle and fps stats in real time
+        function updateDisplay() {
+            if (particleSystem) {
+                const stats = particleSystem.getStats();
+                const particleCountEl = document.getElementById('particleCount');
+                const fpsEl = document.getElementById('fps');
+                const LODLabel = document.getElementById('lodLabel');
+
+                if (particleCountEl) {
+                    particleCountEl.textContent = stats.particleCount;
+                }
+                if (fpsEl) {
+                    fpsEl.textContent = stats.fps;
+                }
+                if (LODLabel) {
+                    LODLabel.textContent = stats.lodMode ? 'Active' : 'Off';
+                }
+
+                requestAnimationFrame(updateDisplay);
+            }
+        }
+        
+        function toggleControls() {
+            const controlPanel = document.getElementById('controlPanel');
+            if (controlPanel) {
+                const isHiding = !controlPanel.classList.contains('hidden');
+                controlPanel.classList.toggle('hidden');
+
+                //if hiding main panel, also hide advanced panel
+                if (isHiding) {
+                    const advancedPanel = document.getElementById('advancedPanel');
+                    const advancedButton = document.querySelector('a[onclick*="toggleAdvanced"], button[onclick*="toggleAdvanced"]');
+
+                    if (advancedPanel) advancedPanel.classList.add('hidden');
+                    if (advancedButton) advancedButton.className = 'cta-btn secondary';
+                }
+            }
+        }
+
+        function toggleAdvanced() {
+            const advancedPanel = document.getElementById('advancedPanel');
+            const advancedButton = document.querySelector('a[onclick*="toggleAdvanced"], button[onclick*="toggleAdvanced"]');
+
+            if (advancedPanel) {
+                const isOpening = advancedPanel.classList.contains('hidden');
+                advancedPanel.classList.toggle('hidden');
+        
+                if (advancedButton) {
+                    if (isOpening) {
+                        advancedButton.className = 'cta-btn primary';
+                    } else {
+                        advancedButton.className = 'cta-btn secondary';
+                    }
+                }
+            }
+        }
+        
+        function toggleOverlay() {
+            const canvasOverlay = document.getElementById('canvasOverlay');
+            if (canvasOverlay) canvasOverlay.classList.toggle('hidden');
+        }
+        
+        function syncInputValues() {
+            const controlPairs = [
+                'particleCount', 'radius', 'opacityStep', 'simulationSpeed', 'connectionThreshold', 'fadeDistance', 'connectionHysteresis',
+                'gridSize', 'maxConnections', 'damping', 'gravityX', 'gravityY'
+            ];
+            
+            controlPairs.forEach(id => {
+                const slider = document.getElementById(id + 'Slider');
+                const input = document.getElementById(id + 'Value');
+                if (slider && input) {
+                    input.value = slider.value;
+                }
+            });
+        }
+    </script>
 </body>
 </html>

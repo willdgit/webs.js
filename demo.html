@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Particle System - Professional Demos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.min.css" onerror="this.href='style.css'">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="nameplate-header centered">
+                <h3>webs.js Demos</h3>
+                <span class="version-badge">v2.0</span>
+            </div>
+            <p>Explore the full capabilities of our portable particle system library</p>
+        </header>
+
+        <main class="main-content">
+            <section class="demo-section">
+                <h2>Basic Usage</h2>
+                <p>Simple particle system with default settings.</p>
+                
+                <div class="canvas-container" style="max-width: 500px; margin: 24px auto;">
+                    <canvas id="canvas1" width="500" height="350"></canvas>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="startDemo1()">Start</button>
+                    <button class="btn btn-secondary" onclick="stopDemo1()">Stop</button>
+                    <button class="btn btn-secondary" onclick="destroyDemo1()">Destroy</button>
+                </div>
+
+            </section>
+            
+            <section class="demo-section">
+                <h2>Custom Configuration</h2>
+                <p>Particle system with custom colors, connections, and real-time parameter adjustment.</p>
+                
+                <div class="canvas-container" style="max-width: 700px; margin: 24px auto; position: relative;">
+                    <canvas id="canvas2" width="700" height="450"></canvas>
+                    
+                    <!-- Nameplate / CTA Overlay -->
+                    <div class="canvas-overlay">
+                        <div class="nameplate">
+                            <div class="nameplate-header">
+                                <h3>webs.js</h3>
+                                <span class="version-badge">v2.0</span>
+                            </div>
+                            <p class="tagline">High-Performance Particle System</p>
+                            <div class="cta-buttons">
+                                <a class="cta-btn primary" href='https://github.com/willdgit/webs.js' target="_blank" rel="noopener">
+                                <span>⭐</span> Star on GitHub
+                                    </a>
+                                <a class="cta-btn secondary" href='https://www.npmjs.com/package/webs.js' target="_blank" rel="noopener">
+                                    📦 NPM Package
+                                </a>
+                            </div>
+                            <div class="features">
+                                <span class="feature-tag">Real-time</span>
+                                <span class="feature-tag">60+ FPS</span>
+                                <span class="feature-tag">Customizable</span>
+                                <span class="feature-tag">API</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="startDemo2()">Start</button>
+                    <button class="btn btn-secondary" onclick="stopDemo2()">Stop</button>
+                    <button class="btn btn-secondary" onclick="destroyDemo2()">Destroy</button>
+                </div>
+
+
+
+                <div class="controls-panel">
+                    <h3>Real-time controls example</h3>
+                    <div class="controls">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <label style="color: var(--text-secondary); font-size: 0.875rem;">Particle Count:</label>
+                            <input type="number" id="countValue" value="150" min="50" max="300" class="control-value-input" style="width: 60px;">
+                            <input type="range" id="countSlider" min="50" max="300" value="150" style="width: 120px;">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <label style="color: var(--text-secondary); font-size: 0.875rem;">Radius:</label>
+                            <input type="number" id="radiusValue" value="1.5" min="0.5" max="3" step="0.1" class="control-value-input" style="width: 60px;">
+                            <input type="range" id="radiusSlider" min="0.5" max="3" step="0.1" value="1.5" style="width: 120px;">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <label style="color: var(--text-secondary); font-size: 0.875rem;">Color:</label>
+                            <input type="color" id="colorPicker" value="#0f0f0f" style="width: 40px; height: 32px; border: none; border-radius: 4px;">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <label style="color: var(--text-secondary); font-size: 0.875rem;" for="connectionsToggle">Connections:</label>
+                            <input type="checkbox" id="connectionsToggle" checked class="control-input">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <label style="color: var(--text-secondary); font-size: 0.875rem;" for="enableAdvancedPhysicsToggle">Advanced Physics:</label>
+                            <input type="checkbox" id="enableAdvancedPhysicsToggle" class="control-input">
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="demo-section">
+                <h2>Multiple Instances</h2>
+                <p>Two independent particle systems running simultaneously.</p>
+                
+                <div class="multi-instance-grid">
+                    <div class="instance-card">
+                        <h3>System A</h3>
+                        <div class="canvas-container">
+                            <canvas id="canvas3a" width="300" height="200"></canvas>
+                        </div>
+                        <div class="controls">
+                            <button class="btn btn-primary" onclick="startDemo3a()">Start</button>
+                            <button class="btn btn-secondary" onclick="stopDemo3a()">Stop</button>
+                        </div>
+                    </div>
+                    
+                    <div class="instance-card">
+                        <h3>System B</h3>
+                        <div class="canvas-container">
+                            <canvas id="canvas3b" width="300" height="200"></canvas>
+                        </div>
+                        <div class="controls">
+                            <button class="btn btn-primary" onclick="startDemo3b()">Start</button>
+                            <button class="btn btn-secondary" onclick="stopDemo3b()">Stop</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="webs.js"></script>
+    <script>
+        let demo1 = null, demo2 = null, demo3a = null, demo3b = null;
+        
+        function startDemo1() {
+            if (!demo1) demo1 = initParticles(document.getElementById('canvas1'), { particleCount: 100 });
+            demo1.start();
+            updateCount1();
+        }
+        
+        function stopDemo1() { if (demo1) demo1.stop(); }
+        
+        function destroyDemo1() {
+            if (demo1) {
+                demo1.destroy();
+                demo1 = null;
+                document.getElementById('count1').textContent = '0';
+            }
+        }
+        
+        function updateCount1() {
+            if (demo1) {
+                document.getElementById('count1').textContent = demo1.getParticleCount();
+                if (demo1.running) setTimeout(updateCount1, 100);
+            }
+        }
+        
+        function startDemo2() {
+            if (!demo2) demo2 = initParticles(document.getElementById('canvas2'), {
+                particleCount: 150, radius: 1.5, particleColor: '#0f0f0f',
+                enableConnections: true, backgroundColor: '#a0a0a0',
+                enableTrails: true, trailLength: 10,
+                enableMouseRepel: true, mouseRepelRadius: 100,
+                enableAdvancedPhysics: false,
+                damping: 0.99,
+                gravity: { x: 0, y: 0 }
+            });
+            demo2.start();
+            updateCount2();
+        }
+        
+        function stopDemo2() { if (demo2) demo2.stop(); }
+        
+        function destroyDemo2() {
+            if (demo2) {
+                demo2.destroy();
+                demo2 = null;
+            }
+        }
+        
+        function updateCount2() {
+            if (demo2) {
+                document.getElementById('count2').textContent = demo2.getParticleCount();
+                if (demo2.running) setTimeout(updateCount2, 100);
+            }
+        }
+        
+        function startDemo3a() {
+            if (!demo3a) demo3a = initParticles(document.getElementById('canvas3a'), {
+                particleCount: 80, particleColor: '#3498db', backgroundColor: '#34495e'
+            });
+            demo3a.start();
+            updateCount3a();
+        }
+        
+        function stopDemo3a() { if (demo3a) demo3a.stop(); }
+        
+        function startDemo3b() {
+            if (!demo3b) demo3b = initParticles(document.getElementById('canvas3b'), {
+                particleCount: 80, particleColor: '#e74c3c', backgroundColor: '#2c3e50'
+            });
+            demo3b.start();
+            updateCount3b();
+        }
+        
+        function stopDemo3b() { if (demo3b) demo3b.stop(); }
+        
+        function updateCount3a() {
+            if (demo3a) {
+                document.getElementById('count3a').textContent = demo3a.getParticleCount();
+                if (demo3a.running) setTimeout(updateCount3a, 100);
+            }
+        }
+        
+        function updateCount3b() {
+            if (demo3b) {
+                document.getElementById('count3b').textContent = demo3b.getParticleCount();
+                if (demo3b.running) setTimeout(updateCount3b, 100);
+            }
+        }
+        
+        function syncInputValues() {
+            document.getElementById('countValue').value = document.getElementById('countSlider').value;
+            document.getElementById('radiusValue').value = document.getElementById('radiusSlider').value;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const countSlider = document.getElementById('countSlider');
+            const countValue = document.getElementById('countValue');
+            const radiusSlider = document.getElementById('radiusSlider');
+            const radiusValue = document.getElementById('radiusValue');
+            const colorPicker = document.getElementById('colorPicker');
+            const connectionsToggle = document.getElementById('connectionsToggle');
+            const advancedPhysicsToggle = document.getElementById('enableAdvancedPhysicsToggle');
+            
+            syncInputValues();
+            
+            countSlider.addEventListener('input', function() {
+                const value = this.value;
+                countValue.value = value;
+                if (demo2) {
+                    demo2.setParticleCount(parseInt(value));
+                    updateCount2();
+                }
+            });
+            
+            countValue.addEventListener('input', function() {
+                const value = this.value;
+                countSlider.value = value;
+                if (demo2) {
+                    demo2.setParticleCount(parseInt(value));
+                    updateCount2();
+                }
+            });
+            
+            radiusSlider.addEventListener('input', function() {
+                const value = this.value;
+                radiusValue.value = parseFloat(value).toFixed(1);
+                if (demo2) {
+                    demo2.updateOptions({ radius: parseFloat(value) });
+                    document.getElementById('radius2').textContent = parseFloat(value).toFixed(1);
+                }
+            });
+            
+            radiusValue.addEventListener('input', function() {
+                const value = this.value;
+                radiusSlider.value = value;
+                if (demo2) {
+                    demo2.updateOptions({ radius: parseFloat(value) });
+                    document.getElementById('radius2').textContent = parseFloat(value).toFixed(1);
+                }
+            });
+            
+            colorPicker.addEventListener('input', function() {
+                if (demo2) demo2.updateOptions({ particleColor: this.value });
+            });
+            
+            connectionsToggle.addEventListener('change', function() {
+                if (demo2) demo2.updateOptions({ enableConnections: this.checked });
+            });
+            
+            advancedPhysicsToggle.addEventListener('change', function() {
+                if (demo2) demo2.updateOptions({ enableAdvancedPhysics: this.checked });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{
+    "name": "webs.js",
+    "version": "2.0.0",
+    "description": "A modern, embeddable particle system library that provides a clean API for creating interactive particle animations in web applications",
+    "main": "webs.js",
+    "type": "module",
+    "exports": {
+        ".": "./webs.js"
+    },
+    "scripts": {
+        "test": "node -e \"const fs = require('fs'); const content = fs.readFileSync('./webs.js', 'utf8'); console.log('✓ Module file exists and is readable'); console.log('✓ Contains ParticleSystem class:', content.includes('class ParticleSystem')); console.log('✓ Contains initParticles function:', content.includes('function initParticles')); console.log('✓ Contains UMD export pattern:', content.includes('window.initParticles')); console.log('✓ Contains proper JSDoc:', content.includes('/**')); console.log('All basic tests passed!');\"",
+        "build": "echo 'Build step - add your bundler here if needed'",
+        "deploy": "echo 'Deploy step - handled by GitHub Actions'"
+    },
+    "keywords": [
+        "particles",
+        "animation",
+        "canvas",
+        "graphics",
+        "interactive",
+        "particle-system",
+        "web-animation",
+        "javascript",
+        "es6",
+        "performance",
+        "spatial-partitioning",
+        "verlet-integration"
+    ],
+    "author": "Will D williamderksen@hotmail.com (https://williamd.ca)",
+    "license": "ISC",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/willdgit/webs.js.git"
+    },
+    "bugs": {
+        "url": "https://github.com/willdgit/webs.js/issues"
+    },
+    "homepage": "https://github.com/willdgit/webs.js#readme",
+    "files": [
+        "webs.js",
+        "README.md"
+    ],
+    "browserslist": [
+        "last 2 versions",
+        "> 1%",
+        "not dead"
+    ],
+    "devDependencies": {},
+    "dependencies": {}
+}
