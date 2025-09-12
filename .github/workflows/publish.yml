@@ -20,9 +20,6 @@ jobs:
         registry-url: 'https://npm.pkg.github.com/'
         scope: '@willdgit'
 
-    - name: Install dependencies
-      run: npm install
-
     - name: Publish to GitHub Packages
       run: npm publish
       env:
@@ -33,6 +30,10 @@ jobs:
       with:
         node-version: '20'
         registry-url: 'https://registry.npmjs.org/'
+
+    - name: Prepare for npm publish
+      run: |
+        sed -i 's/"name": "@willdgit\/webs.js"/"name": "webs.js"/' package.json
 
     - name: Publish to npm
       run: npm publish --registry https://registry.npmjs.org/
