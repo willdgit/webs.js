@@ -27,3 +27,14 @@ jobs:
       run: npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GH_PAT }}
+
+    - name: Setup Node.js for npm
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        registry-url: 'https://registry.npmjs.org/'
+
+    - name: Publish to npm
+      run: npm publish --registry https://registry.npmjs.org/
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
