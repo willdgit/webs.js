@@ -115,7 +115,7 @@ class ParticleSystem {
         this.canvas.style.width = rect.width + 'px';
         this.canvas.style.height = rect.height + 'px';
 
-        //set transform for HiDPI
+        //HiDPI
         this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         
         //store dimensions in CSS pixels for physics
@@ -965,6 +965,7 @@ class ParticleSystem {
 * @returns {Object} our color represented as RGB (0-255)
 */
 function parseColor(colorString) {
+    //resolve our hex string to rgb
     if (colorString.startsWith('#')) {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(colorString);
         return result ? {
@@ -972,6 +973,7 @@ function parseColor(colorString) {
             g: parseInt(result[2], 16),
             b: parseInt(result[3], 16)
         } : { r: 255, g: 255, b: 255 };
+    //parse our rgb string
     } else if (colorString.startsWith('rgb')) {
         const result = colorString.match(/\d+/g);
         return result ? {
