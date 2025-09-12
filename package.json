@@ -1,6 +1,6 @@
 {
     "name": "@willdgit/webs.js",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "description": "A modern, embeddable particle system library that provides a clean API for creating interactive particle animations in web applications",
     "main": "webs.js",
     "type": "module",
