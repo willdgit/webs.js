@@ -7,37 +7,44 @@ on:
     branches: [ main, master ]
 
 jobs:
-  test-and-deploy:
+  test-build-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
 
-    - name: Run tests
-      run: npm test
+      - name: Run tests
+        run: npm test
 
-    - name: Build (if needed)
-      run: npm run build
+      - name: Build
+        run: npm run build
 
-    - name: Prepare publish directory
-      run: |
-        mkdir -p publish
-        cp index.html publish/ 2>/dev/null || true
-        cp demo.html publish/ 2>/dev/null || true
-        cp simple-example.html publish/ 2>/dev/null || true
-        cp style.css publish/ 2>/dev/null || true
-        cp webs.js publish/
-        cp README.md publish/ 2>/dev/null || true
+      - name: Publish to GitHub Packages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-    - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GH_PAT }}
-        publish_dir: ./publish
+      - name: Prepare publish directory
+        run: |
+          mkdir -p publish
+          cp index.html publish/ 2>/dev/null || true
+          cp demo.html publish/ 2>/dev/null || true
+          cp simple-example.html publish/ 2>/dev/null || true
+          cp style.css publish/ 2>/dev/null || true
+          cp webs.js publish/
+          cp README.md publish/ 2>/dev/null || true
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: ./publish

@@ -1,3 +1,15 @@
-gravity x and y inputs
-damping does not seem to be working
+particles in topleft gridcell can connect much farther than they should be able (across grid cells)
+    also acting weird in general - keeping stored connections to particles that aren't there
+
+index.html: 
+page title & favicon
+fade distance slider is not working
+damping value does not seem to be working
 add reset to default settings button
+raise default gridsize and connection threshold
+reduce default radius to .2 or .3
+    
+    mobile:
+    decrease status display z index
+    move settings windows down a bit
+    features list gets stacked, check spacing / justify / available width
