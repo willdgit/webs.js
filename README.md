@@ -1,6 +1,7 @@
 # webs.js
 
 ![GitHub stars](https://img.shields.io/github/stars/willdgit/webs.js?style=social)
+
 An embeddable particle system library that provides a clean API for creating interactive particle animations in web applications.
 
 `webs.js` is the first public release of my original **webs** project after a complete rework. You can view a demo of that original project [here](https://willdgit.github.io/webs/).
