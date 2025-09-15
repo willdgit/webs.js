@@ -193,33 +193,7 @@ For local development, clone the repository:
 ```bash
 git clone https://github.com/willdgit/webs.js.git
 cd webs.js
-
-# Install dependencies (if any)
-npm install
-
-# Run tests
-npm test
-
-# Start development (if you add a dev server)
-npm run dev
 ```
-
-### Testing
-
-The library includes a simple test suite that verifies:
-- Module loads correctly
-- Core classes and functions are present
-- UMD export pattern works
-- JSDoc documentation is included
-
-Run tests with: `npm test`
-
-### CI/CD
-
-GitHub Actions automatically:
-- Runs tests on push/PR
-- Builds the project
-- Deploys demos to GitHub Pages
 
 ## Questions, Comments, Contributions
 
